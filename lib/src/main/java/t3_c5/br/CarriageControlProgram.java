@@ -1,4 +1,4 @@
-package lib.src.main.java.t3_c5.br;
+package t3_c5.br;
 // File path: src/main/java/CarriageControlProgram.java
 
 import org.json.JSONObject;

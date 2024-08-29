@@ -26,7 +26,9 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation libs.guava
-    
+
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+
     implementation 'org.json:json:20220320'
 }
 
