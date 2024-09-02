@@ -1,12 +1,13 @@
 // need to create interface file so sensor class can 
 
+
 interface accelerateInput { // these names will change based on other classes
     double getXAcceleration();
 
     double getYAcceleration();
 }
 
-public class Accelerator {
+public class Accelerator {  // may need to extend ccp
 
     private double slow = 1.5; // example values, these will change based on live feedback values
     private double medium = 3;
@@ -24,10 +25,10 @@ public class Accelerator {
     }
 
     public void updateAcceleration() { // update values of x y acceleration // will need to fix this part later
-        if (input <= 500 || input >= 0) { // example line, update required
+      //  if (input <= 500 || input >= 0) { // example line, update required
             this.xAcceleration = input.getXAcceleration();
             this.yAcceleration = input.getYAcceleration();
-        }
+     //   }
     }
 
     // Getters
@@ -38,5 +39,9 @@ public class Accelerator {
     public double getYAcceleration() {
         return yAcceleration;
     }
+
+    // add a main arg that processes input and changes speed/acc of carriage
+
+    
 
 }
