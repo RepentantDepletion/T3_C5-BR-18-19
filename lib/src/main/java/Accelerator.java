@@ -8,8 +8,11 @@ interface accelerateInput { // these names will change based on other classes
 
 public class Accelerator { // may need to extend ccp
 
-    private double desiredSpeed;
-    private double desiredVoltage;
+  //  private double desiredSpeed;
+  //  private double desiredVoltage;
+    private double redSpeed = 0;
+    private double blueSpeed = 1.5;
+    private double greenSpeed = 3;
 
     private double xAcceleration; // input for x y
     private double yAcceleration;
@@ -23,10 +26,10 @@ public class Accelerator { // may need to extend ccp
     }
 
     public void updateAcceleration() { // update values of x y acceleration // will need to fix this part later
-        // if (input <= 500 || input >= 0) { // example line, update required
+         if (input != null) { 
         this.xAcceleration = input.getXAcceleration();
         this.yAcceleration = input.getYAcceleration();
-        // }
+        }
     }
 
     // Getters
@@ -42,21 +45,21 @@ public class Accelerator { // may need to extend ccp
 
     public void setXAcceleration(Sensor input) {
         if (input.LedColor == Sensor.red) {
-            this.xAcceleration = desiredSpeed;
+            xAcceleration = redSpeed;
         } else if (input.LedColor == Sensor.blue) {
-            this.xAcceleration = desiredSpeed;
+            xAcceleration = blueSpeed;
         } else if (input.LedColor == Sensor.green) {
-            this.xAcceleration = desiredSpeed;
+            xAcceleration = greenSpeed;
         }
     }
 
     public void setYAcceleration(Sensor input) {
         if (input.LedColor == Sensor.red) {
-            this.yAcceleration = desiredSpeed;
+            yAcceleration = redSpeed;
         } else if (input.LedColor == Sensor.blue) {
-            this.yAcceleration = desiredSpeed;
+            yAcceleration = blueSpeed;
         } else if (input.LedColor == Sensor.green) {
-            this.yAcceleration = desiredSpeed;
+            yAcceleration = greenSpeed;
         }
     }
 
