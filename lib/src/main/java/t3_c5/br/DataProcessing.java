@@ -5,13 +5,13 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SystemController {
+public class DataProcessing extends SystemController {   // change "SystemController" name to whatever class youre extendinh
 
     private Map<String, Object> componentData;
     private Map<String, Object> commandData;
     
     // Constructor
-    public SystemController() {
+    public DataProcessing() {
         this.componentData = new HashMap<>();
         this.commandData = new HashMap<>();
     }
