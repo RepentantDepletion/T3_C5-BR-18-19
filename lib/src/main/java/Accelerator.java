@@ -1,17 +1,15 @@
 // need to create interface file so sensor class can 
 
-
 interface accelerateInput { // these names will change based on other classes
     double getXAcceleration();
 
     double getYAcceleration();
 }
 
-public class Accelerator {  // may need to extend ccp
+public class Accelerator { // may need to extend ccp
 
-    private double slow = 1.5; // example values, these will change based on live feedback values
-    private double medium = 3;
-    private double fast = 4.5;
+    private double desiredSpeed;
+    private double desiredVoltage;
 
     private double xAcceleration; // input for x y
     private double yAcceleration;
@@ -25,10 +23,10 @@ public class Accelerator {  // may need to extend ccp
     }
 
     public void updateAcceleration() { // update values of x y acceleration // will need to fix this part later
-      //  if (input <= 500 || input >= 0) { // example line, update required
-            this.xAcceleration = input.getXAcceleration();
-            this.yAcceleration = input.getYAcceleration();
-     //   }
+        // if (input <= 500 || input >= 0) { // example line, update required
+        this.xAcceleration = input.getXAcceleration();
+        this.yAcceleration = input.getYAcceleration();
+        // }
     }
 
     // Getters
@@ -40,8 +38,26 @@ public class Accelerator {  // may need to extend ccp
         return yAcceleration;
     }
 
-    // add a main arg that processes input and changes speed/acc of carriage
+    // setters  // note: 
 
-    
+    public void setXAcceleration(Sensor input) {
+        if (input.LedColor == Sensor.red) {
+            this.xAcceleration = desiredSpeed;
+        } else if (input.LedColor == Sensor.blue) {
+            this.xAcceleration = desiredSpeed;
+        } else if (input.LedColor == Sensor.green) {
+            this.xAcceleration = desiredSpeed;
+        }
+    }
+
+    public void setYAcceleration(Sensor input) {
+        if (input.LedColor == Sensor.red) {
+            this.yAcceleration = desiredSpeed;
+        } else if (input.LedColor == Sensor.blue) {
+            this.yAcceleration = desiredSpeed;
+        } else if (input.LedColor == Sensor.green) {
+            this.yAcceleration = desiredSpeed;
+        }
+    }
 
 }

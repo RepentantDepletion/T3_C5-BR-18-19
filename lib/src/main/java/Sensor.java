@@ -4,14 +4,20 @@ interface lightInput { // these names will change based on other classes
 
 public class Sensor {
 
-    double red;
-    double green;
-    double blue;
+    static double red;
+    static double green;
+    static double blue;
     private lightInput input;
+    public float LedColor;
 
     // constructors
     public Sensor(lightInput input) {
         this.input = input;
+    }
+
+    // Getters
+    public double getLedColour() {
+        return LedColor;
     }
 
 }
