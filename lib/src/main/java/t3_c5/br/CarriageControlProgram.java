@@ -30,10 +30,7 @@ public class CarriageControlProgram {
             statusMessage.put("message", "Status Update");
             statusMessage.put("client_id", "Carriage123");
             statusMessage.put("timestamp", System.currentTimeMillis() / 1000L);
-            statusMessage.put("door_status", this.doorStatus);
-            statusMessage.put("battery_level", this.batteryLevel);
             statusMessage.put("station_id", this.stationID);
-            statusMessage.put("speed", this.speed);
             statusMessage.put("sensor_status", this.sensorStatus);
         } catch (Exception e) {
             System.out.println("Error creating status JSON: " + e.getMessage());
@@ -47,13 +44,13 @@ public class CarriageControlProgram {
             String action = execCommand.optString("action");
             if (action != null && !action.isEmpty()) {
                 switch (action) {
-                    case "update_speed":
+                    case "SLOW":
                         this.speed = (float) execCommand.getDouble("speed");
                         break;
-                    case "open_door":
+                    case "OPEN":
                         this.doorStatus = "open";
                         break;
-                    case "close_door":
+                    case "CLOSE":
                         this.doorStatus = "closed";
                         break;
                     case "update_status":
