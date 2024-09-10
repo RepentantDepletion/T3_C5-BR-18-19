@@ -44,23 +44,11 @@ public class Accelerator { // may need to extend ccp
     // setters  // note: 
 
     public void setXAcceleration(Sensor input) {
-        if (input.LedColor == Sensor.red) {
-            xAcceleration = redSpeed;
-        } else if (input.LedColor == Sensor.blue) {
-            xAcceleration = blueSpeed;
-        } else if (input.LedColor == Sensor.green) {
-            xAcceleration = greenSpeed;
-        }
+        
     }
 
     public void setYAcceleration(Sensor input) {
-        if (input.LedColor == Sensor.red) {
-            yAcceleration = redSpeed;
-        } else if (input.LedColor == Sensor.blue) {
-            yAcceleration = blueSpeed;
-        } else if (input.LedColor == Sensor.green) {
-            yAcceleration = greenSpeed;
-        }
+     
     }
 
 }
