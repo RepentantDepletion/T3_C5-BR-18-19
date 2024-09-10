@@ -13,8 +13,7 @@ public class CarriageControlProgram {
     private String stationID;
     
     // Constructor
-    public CarriageControlProgram(float speed, String doorStatus, String status, String sensorStatus, float batteryLevel, String stationID) {
-        this.speed = speed;
+    public CarriageControlProgram(String doorStatus, String status, String sensorStatus, float batteryLevel, String stationID) {
         this.doorStatus = doorStatus;
         this.status = status;
         this.sensorStatus = sensorStatus;
@@ -42,26 +41,15 @@ public class CarriageControlProgram {
     public void fromMCPExec(JSONObject execCommand) {
         try {
             String action = execCommand.optString("action");
+            String message = execCommand.getString("message");
             if (action != null && !action.isEmpty()) {
-                switch (action) {
-                    case "SLOW":
-                        this.speed = (float) execCommand.getDouble("speed");
-                        break;
-                    case "OPEN":
-                        this.doorStatus = "open";
-                        break;
-                    case "CLOSE":
-                        this.doorStatus = "closed";
-                        break;
-                    case "update_status":
-                        this.status = execCommand.getString("status");
-                        break;
-                    case "update_sensor_status":
-                        this.sensorStatus = execCommand.getString("sensor_status");
-                        break;
-                    default:
-                        System.out.println("Unknown action: " + action);
-                }
+                DataProcessing.setCommand("" + action);
+            }
+            else if(message == "STAT"){
+                DataProcessing.setCommand("" + message);
+            }
+            else{
+                CommunicationFromMCP.setMessage("" + message);
             }
         } catch (Exception e) {
             System.out.println("Error processing execution JSON: " + e.getMessage());
