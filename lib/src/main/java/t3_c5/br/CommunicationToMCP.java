@@ -4,7 +4,21 @@ import java.io.FileReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.ClassNotFoundException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 public class CommunicationToMCP {
+ 
+
+
+
+
+
  DataProcessing b = new DataProcessing();
       //JSONParser jsonparser= new JSONParser();
       String json =  "{commmandsto: [{ client_type: ccp,message: AKIN,client_id: BRXX, timestamp: 2019-09-07T15:50+00Z},{client_type: ccp,message: STAT,client_id: BRXX,timestamp: 2019-09-07T15:50+00Z},{client_type: ccp,message: EXEC,client_id: BRXX,timestamp: 2019-09-07T15:50+00Z,action: SLOW},{client_type: ccp, message: EXEC, client_id: BRXX, timestamp: 2019-09-07T15:50+00Z, action: FAST}, {client_type: ccp, message: EXEC,client_id: BRXX,timestamp: 2019-09-07T15:50+00Z,action: STOP},{client_type: ccp,message: DOOR,client_id: BRXX,timestamp: 2019-09-07T15:50+00Z, action: OPEN}, {client_type: ccp,message: DOOR,client_id: BRXX,timestamp: 2019-09-07T15:50+00Z,action: CLOSE}]}";
@@ -17,13 +31,17 @@ public class CommunicationToMCP {
          JSONArray array = (JSONArray) obj.get("commandsto");
  CommunicationFromMCP c = new CommunicationFromMCP();
  
+
    //  CarriageControlProgram a = new CarriageControlProgram();
+
+   
     String clienttype;
     String message;
     String client_id;
     String timestamp;
     String action;
     String station_id;
+
     // public static void main(String[] args) {
     // c.recieveMessages(Jobj)
     // }
