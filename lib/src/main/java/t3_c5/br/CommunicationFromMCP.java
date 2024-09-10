@@ -27,8 +27,8 @@ public class CommunicationFromMCP {
 
     //  }
     // read message and check if akin, if so run handshake 
-    public void setMessage(String message) {
-        this.message = message;
+    public static void setMessage(String Message) {
+        message = Message;
     }
 
 
@@ -76,7 +76,7 @@ void handshakeBR18(){
 
 
     String clienttype;
-    String message;
+    static String message;
     String client_id;
     String timestamp;
     String action;
