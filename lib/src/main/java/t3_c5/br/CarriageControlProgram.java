@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 public class CarriageControlProgram {
     
-    private float speed;
     private String doorStatus;
     private String status;
     private String sensorStatus;
@@ -57,13 +56,6 @@ public class CarriageControlProgram {
     }
 
     // Getters and Setters for encapsulation
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
 
     public String getDoorStatus() {
         return doorStatus;
