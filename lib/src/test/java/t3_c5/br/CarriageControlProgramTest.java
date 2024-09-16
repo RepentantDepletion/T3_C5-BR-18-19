@@ -13,7 +13,7 @@ public class CarriageControlProgramTest {
 
     @BeforeEach
     public void setUp() {
-        carriageControlProgram = new CarriageControlProgram(50.0f, "closed", "normal", "all sensors OK", 80.0f, "StationA");
+        carriageControlProgram = new CarriageControlProgram("closed", "normal", "all sensors OK", 80.0f, "StationA");
     }
 
     @Test

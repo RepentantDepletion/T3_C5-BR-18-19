@@ -3,21 +3,22 @@ package t3_c5.br;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 public class DataProcessing {
 
     private Map<String, Object> componentData; // Stores data from various components (e.g., feedback, Aryan's classes)
-    private Map<String, Object> commandData;   // Stores commands and data received from the Carriage Control Program (CCP)
+    private static Map<String, Object> commandData;   // Stores commands and data received from the Carriage Control Program (CCP)
     private String stationID; // Variable to store station ID directly
 
     // Constructor initializes the componentData and commandData maps
     public DataProcessing() {
         this.componentData = new HashMap<>();
-        this.commandData = new HashMap<>();
+        DataProcessing.commandData = new HashMap<>();
     }
 
     // Setter method for stationID
-    public void setStationID(String stationID) {
-        this.stationID = stationID;
+    public static void setStationID(String stationID) {
         commandData.put("stationID", stationID); // Also store in commandData map
     }
 
@@ -27,7 +28,7 @@ public class DataProcessing {
     }
 
     // Method to store and process string commands received from the Carriage Control Program (CCP)
-    public void processCarriageCommand(String command) {
+    public static void processCarriageCommand(String command) {
         try {
             String[] parts = command.split(":");
             String commandType = parts[0].trim();
@@ -42,12 +43,6 @@ public class DataProcessing {
                     break;
                 case "set_status":
                     commandData.put("status", value);
-                    break;
-                case "set_sensor_status":
-                    commandData.put("sensorStatus", value);
-                    break;
-                case "set_battery_level":
-                    commandData.put("batteryLevel", Float.parseFloat(value));
                     break;
                 case "set_station_id":
                     setStationID(value); // Use the setter for stationID

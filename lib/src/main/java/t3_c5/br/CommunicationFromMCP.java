@@ -1,9 +1,7 @@
 package t3_c5.br;
-import java.io.FileReader;
 import org.json.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.ClassNotFoundException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -77,7 +75,7 @@ void handshakeBR18(){
 
     String clienttype;
     static String message;
-    String client_id;
+    static String client_id;
     String timestamp;
     String action;
     String station_id;
@@ -85,8 +83,8 @@ void handshakeBR18(){
 
         public void recieveMessages(JSONObject array){
                 this.clienttype =(String)array.get("clienttype");
-                this.message=(String)array.get("message");
-                this.client_id=(String)array.get("client_id");
+                CommunicationFromMCP.message=(String)array.get("message");
+                CommunicationFromMCP.client_id=(String)array.get("client_id");
                 this.timestamp=(String)array.get("timestamp");
                 this.action=(String)array.get("action");
         }
