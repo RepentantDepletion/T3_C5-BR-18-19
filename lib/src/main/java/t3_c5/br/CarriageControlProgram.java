@@ -22,7 +22,7 @@ public class CarriageControlProgram {
         JSONObject statusMessage = new JSONObject();
         try {
             statusMessage.put("client_type:", "CarriageControlProgram");
-            statusMessage.put("message:", "Status Update");
+            statusMessage.put("message:", "STAT");
             statusMessage.put("client_id:", "" + CommunicationFromMCP.client_id);
             statusMessage.put("timestamp:", LocalDateTime.now());
             statusMessage.optString("status:", this.status);
@@ -34,10 +34,10 @@ public class CarriageControlProgram {
     }
 
     // Method to parse incoming JSON commands from the Master Carriage Program (MCP)
-    public void fromMCPExec(JSONObject execCommand) {
+    public void fromMCP(JSONObject execCommand) {
         try {
-            String action = execCommand.optString("action");
-            String message = execCommand.getString("message");
+            String action = execCommand.optString("action:");
+            String message = execCommand.getString("message:");
             if (action != null && !action.isEmpty()) {
                 DataProcessing.processCarriageCommand("" + action);
             }

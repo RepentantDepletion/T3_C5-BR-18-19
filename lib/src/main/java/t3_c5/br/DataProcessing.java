@@ -66,11 +66,8 @@ public class DataProcessing {
 
         try {
             // Adding relevant data from commandData to the JSON object
-            mcpData.put("speed", commandData.get("speed"));
             mcpData.put("door_status", commandData.get("doorStatus"));
             mcpData.put("status", commandData.get("status"));
-            mcpData.put("sensor_status", commandData.get("sensorStatus"));
-            mcpData.put("battery_level", commandData.get("batteryLevel"));
             mcpData.put("station_id", getStationID()); // Use the getter for stationID
 
             // Optionally add additional component data if it exists
