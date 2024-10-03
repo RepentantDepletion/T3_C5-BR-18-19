@@ -1,20 +1,26 @@
 package t3_c5.br;
-// File path: src/main/java/CarriageControlProgram.java
 
 import org.json.JSONObject;
 import java.time.LocalDateTime;
+import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 
-public class CarriageControlProgram {
+public class Parser {
     
     private String doorStatus;
     private String status;
     private String stationID;
-    
+    private String ipAddress;
+    private int port;
+
     // Constructor
-    public CarriageControlProgram(String doorStatus, String status, String stationID) {
+    public Parser(String doorStatus, String status, String stationID, String ipAddress, int port) {
         this.doorStatus = doorStatus;
         this.status = status;
         this.stationID = stationID;
+        this.ipAddress = ipAddress;
+        this.port = port;
     }
 
     // Method to create a JSON status message to send to the Master Carriage Program (MCP)
@@ -38,17 +44,33 @@ public class CarriageControlProgram {
         try {
             String action = execCommand.optString("action:");
             String message = execCommand.getString("message:");
+            
             if (action != null && !action.isEmpty()) {
                 DataProcessing.processCarriageCommand("" + action);
-            }
-            else if(message.trim() == "STAT"){
+                sendUdpPacket(action);  // Send action as a UDP packet
+            } else if(message.trim().equals("STAT")) {
                 DataProcessing.processCarriageCommand("" + message);
-            }
-            else{
+                sendUdpPacket(message);  // Send STAT message as a UDP packet
+            } else {
                 CommunicationFromMCP.setMessage("" + message);
+                sendUdpPacket(message);  // Send any other message as a UDP packet
             }
         } catch (Exception e) {
             System.out.println("Error processing execution JSON: " + e.getMessage());
+        }
+    }
+
+    // Method to send a UDP packet
+    private void sendUdpPacket(String message) {
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            byte[] buffer = message.getBytes();
+            InetAddress address = InetAddress.getByName(ipAddress);
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
+            socket.send(packet);
+            socket.close();
+        } catch (Exception e) {
+            System.out.println("Error sending UDP packet: " + e.getMessage());
         }
     }
 
