@@ -14,6 +14,10 @@ public class Parser {
     private String ipAddress;
     private int port;
 
+    public Parser(){
+
+    }
+
     // Constructor
     public Parser(String doorStatus, String status, String stationID, String ipAddress, int port) {
         this.doorStatus = doorStatus;
@@ -29,7 +33,7 @@ public class Parser {
         try {
             statusMessage.put("client_type:", "CarriageControlProgram");
             statusMessage.put("message:", "STAT");
-            statusMessage.put("client_id:", "" + CommunicationFromMCP.client_id);
+            statusMessage.put("client_id:", "" + CommunicationMCP.client_id);
             statusMessage.put("timestamp:", LocalDateTime.now());
             statusMessage.optString("status:", this.status);
             statusMessage.optString("station_id:", this.stationID);
@@ -52,7 +56,7 @@ public class Parser {
                 DataProcessing.processCarriageCommand("" + message);
                 sendUdpPacket(message);  // Send STAT message as a UDP packet
             } else {
-                CommunicationFromMCP.setMessage("" + message);
+                CommunicationMCP.setMessage("" + message);
                 sendUdpPacket(message);  // Send any other message as a UDP packet
             }
         } catch (Exception e) {
