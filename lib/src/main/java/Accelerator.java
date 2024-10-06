@@ -41,14 +41,4 @@ public class Accelerator { // may need to extend ccp
         return yAcceleration;
     }
 
-    // setters  // note: 
-
-    public void setXAcceleration(Sensor input) {
-        
-    }
-
-    public void setYAcceleration(Sensor input) {
-     
-    }
-
 }

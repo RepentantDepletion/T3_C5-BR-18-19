@@ -7,7 +7,7 @@ import org.checkerframework.checker.units.qual.Acceleration;
 public class CCP {
 
     static float Time;
-    CarriageControlProgram input;
+ //   CarriageControlProgram input;
 
    // CommunicationFromMCP mcpInput;
   //  CommunicationToMCP mcpOutput;
