@@ -78,6 +78,29 @@ public class Parser {
         }
     }
 
+    public void receiveUdpPacket() {
+        try {
+            DatagramSocket socket = new DatagramSocket(port);  // Listen on the same port
+            byte[] buffer = new byte[1024];  // Buffer to store received data
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+            
+            System.out.println("Waiting for UDP packet...");
+            socket.receive(packet);  // Receive packet (blocking call)
+            
+            String receivedMessage = new String(packet.getData(), 0, packet.getLength());
+            System.out.println("Received message: " + receivedMessage);
+            
+            // Update the status based on the received message
+            this.status = receivedMessage.trim();  // Trim any trailing whitespace
+            System.out.println("Updated status: " + this.status);
+            
+            socket.close();
+        } catch (Exception e) {
+            System.out.println("Error receiving UDP packet: " + e.getMessage());
+        }
+    }
+
+
     // Getters and Setters for encapsulation
 
     public String getDoorStatus() {
