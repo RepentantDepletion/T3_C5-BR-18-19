@@ -11,7 +11,7 @@ public class Parser {
     private String ipAddress;
     private int port;
     private int sequenceNumber;
-
+    private int errCount;
 
     public Parser() {
 
@@ -51,21 +51,21 @@ public class Parser {
             String action = execCommand.optString("action:");
             String message = execCommand.getString("message:");
 
-            switch(message){
+            switch (message) {
 
-            case "EXEC":
-                sendUdpPacket(action); // Send action as a UDP packet
-                break;
-            case "STRQ":
-                sendUdpPacket(message); // Send STAT message as a UDP packet
-                break;
-            case "AKIN":
-                break;
-            case "ASKT":
-                break;
-            default:
-                toMCP("NOIP");
-                break;
+                case "EXEC":
+                    sendUdpPacket(action); // Send action as a UDP packet
+                    break;
+                case "STRQ":
+                    sendUdpPacket(message); // Send STAT message as a UDP packet
+                    break;
+                case "AKIN":
+                    break;
+                case "ASKT":
+                    break;
+                default:
+                    toMCP("NOIP");
+                    break;
             }
 
             sequenceNumber++;
@@ -85,7 +85,13 @@ public class Parser {
             socket.send(packet);
             socket.close();
         } catch (Exception e) {
-            System.out.println("Error sending UDP packet: " + e.getMessage());
+            if (errCount >= 5) {
+                System.out.println("Connection with BR lost");
+            } else {
+                System.out.println("Error sending UDP packet: " + e.getMessage());
+                System.out.println("Retrying.....");
+                receiveUdpPacket();
+            }
         }
     }
 
@@ -107,7 +113,14 @@ public class Parser {
 
             socket.close();
         } catch (Exception e) {
-            System.out.println("Error receiving UDP packet: " + e.getMessage());
+            errCount++;
+            if (errCount >= 5) {
+                System.out.println("Connection with BR lost");
+            } else {
+                System.out.println("Error receiving UDP packet: " + e.getMessage());
+                System.out.println("Retrying.....");
+                receiveUdpPacket();
+            }
         }
     }
 
@@ -120,11 +133,15 @@ public class Parser {
         this.status = status;
     }
 
-    public int getSequenceNumber(){
+    public int getSequenceNumber() {
         return sequenceNumber;
     }
 
-    public void setSequenceNumber(int sequence){
+    public void setSequenceNumber(int sequence) {
         this.sequenceNumber = sequence;
+    }
+
+    public void resetErrorCount() {
+        errCount = 0;
     }
 }
