@@ -42,7 +42,7 @@ public class Parser {
     }
 
     // Method to create a JSON status message to send to the Master Carriage Program (MCP)
-    public JSONObject toMCPStatus(String message) {
+    public JSONObject toMCP(String message) {
         JSONObject statusMessage = new JSONObject();
         try {
             statusMessage.put("client_type:", "CarriageControlProgram");
