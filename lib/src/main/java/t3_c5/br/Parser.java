@@ -90,7 +90,7 @@ public class Parser {
             } else {
                 System.out.println("Error sending UDP packet: " + e.getMessage());
                 System.out.println("Retrying.....");
-                receiveUdpPacket();
+                sendUdpPacket(message);
             }
         }
     }
