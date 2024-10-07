@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "CCP",
+      "request": "launch",
+      "mainClass": "t3_c5.br.CCP",
+      "projectName": "lib"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
