@@ -2,41 +2,55 @@ package t3_c5.br;
 
 import org.json.JSONObject;
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 public class Parser {
     
-    private String doorStatus;
     private String status;
-    private String stationID;
     private String ipAddress;
     private int port;
+
+    private int outgoingSequenceNumber;
+    private int incomingSequenceNumber;
 
     public Parser(){
 
     }
 
     // Constructor
-    public Parser(String doorStatus, String status, String stationID, String ipAddress, int port) {
-        this.doorStatus = doorStatus;
+    public Parser(String status, String ipAddress, int port) {
         this.status = status;
-        this.stationID = stationID;
         this.ipAddress = ipAddress;
         this.port = port;
+
+        this.outgoingSequenceNumber = 0;
+        this.incomingSequenceNumber = 0;
+    }
+
+    // Initialize sequence numbers from the MCP
+    public void initializeSequenceNumbers(int receivedSequenceNumber) {
+        this.incomingSequenceNumber = receivedSequenceNumber;  // Set the incoming sequence number from MCP
+        
+        // Generate a random outgoing sequence number for our side
+        Random rand = new Random();
+        this.outgoingSequenceNumber = rand.nextInt(10000);
+        
+        // Outgoing sequence number is ready for use in further messages
     }
 
     // Method to create a JSON status message to send to the Master Carriage Program (MCP)
-    public JSONObject toMCPStatus() {
+    public JSONObject toMCPStatus(String message) {
         JSONObject statusMessage = new JSONObject();
         try {
             statusMessage.put("client_type:", "CarriageControlProgram");
-            statusMessage.put("message:", "STAT");
-            statusMessage.put("client_id:", "" + CommunicationMCP.client_id);
-            statusMessage.put("timestamp:", LocalDateTime.now());
+            statusMessage.put("message:", message);
+            statusMessage.put("client_id:", CommunicationMCP.client_id);
+            statusMessage.put("sequence_number:", outgoingSequenceNumber);
             statusMessage.optString("status:", this.status);
-            statusMessage.optString("station_id:", this.stationID);
+            outgoingSequenceNumber++;
         } catch (Exception e) {
             System.out.println("Error creating status JSON: " + e.getMessage());
         }
@@ -49,15 +63,12 @@ public class Parser {
             String action = execCommand.optString("action:");
             String message = execCommand.getString("message:");
             
-            if (action != null && !action.isEmpty()) {
-                DataProcessing.processCarriageCommand("" + action);
+            if (message.trim().equals("EXEC")) {
                 sendUdpPacket(action);  // Send action as a UDP packet
-            } else if(message.trim().equals("STAT")) {
-                DataProcessing.processCarriageCommand("" + message);
+            } else if(message.trim().equals("STRQ")) {
                 sendUdpPacket(message);  // Send STAT message as a UDP packet
             } else {
                 CommunicationMCP.setMessage("" + message);
-                sendUdpPacket(message);  // Send any other message as a UDP packet
             }
         } catch (Exception e) {
             System.out.println("Error processing execution JSON: " + e.getMessage());
@@ -102,28 +113,11 @@ public class Parser {
 
 
     // Getters and Setters for encapsulation
-
-    public String getDoorStatus() {
-        return doorStatus;
-    }
-
-    public void setDoorStatus(String doorStatus) {
-        this.doorStatus = doorStatus;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getStationID() {
-        return stationID;
-    }
-
-    public void setStationID(String stationID) {
-        this.stationID = stationID;
     }
 }
