@@ -76,7 +76,7 @@ public class Parser {
     }
 
     // Method to send a UDP packet
-    private void sendUdpPacket(String message) {
+    public void sendUdpPacket(String message) {
         try {
             DatagramSocket socket = new DatagramSocket();
             byte[] buffer = message.getBytes();

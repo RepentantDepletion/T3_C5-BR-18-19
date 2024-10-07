@@ -23,9 +23,10 @@ public class CommunicationMCP {
 
     Parser THECCP;
 
-    public CommunicationMCP(DatagramSocket socket){
+    public CommunicationMCP(DatagramSocket socket, Parser THECCP, String client_id){
         this.socket=socket;
-        THECCP = new Parser();
+        this.THECCP = THECCP;
+        
 
     }
 
@@ -35,6 +36,57 @@ public class CommunicationMCP {
     }
 
     void handshake(){
+        try{
+            //use parser method to send json init with CCIN messae
+            JSONObject sendJson= THECCP.toMCP("CCIN");
+                    // Convert JSON object to byte array
+                    byte[] sendBuffer = sendJson.toString().getBytes();
+
+                    // Get the IP address and port
+                    InetAddress address = InetAddress.getByName("10.20.30.1");
+                    int port = 2000;
+        
+                    // Create a DatagramPacket to send
+                    DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
+        
+                    // Create a DatagramSocket
+                    DatagramSocket socket = new DatagramSocket();
+        
+                    // Send the packet
+                    socket.send(sendPacket);
+                   
+        
+                    // Set a timeout for receiving the response
+                    socket.setSoTimeout(2000); // 2 seconds
+        
+                    // overrided sendpacket from to be the message sent from MCP
+                    socket.receive(sendPacket);
+        
+                    // Convert the received data to a JSON object
+                    String receivedData = new String(sendPacket.getData(), 0, sendPacket.getLength());
+                    JSONObject receiveJson = new JSONObject(receivedData);
+        
+                    // Check if the received JSON matches the expected values
+                    if (receiveJson.getString("client_type").equals("CCP") &&
+                        receiveJson.getString("message").equals("AKIN") &&
+                        receiveJson.getString("client_id").equals("BR18") &&
+                        receiveJson.getString("sequence_number").equals("s_mcp")) {
+                        System.out.println("Received expected JSON response.");
+                    } else {
+                        System.out.println("Received unexpected JSON response: " + receiveJson.toString());
+                    }
+        
+                    // Close the socket
+                    socket.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+
+    }
+
+    void recieveThenSend(){
         while(true){
         try {
             // Create a socket to listen on the port.
@@ -48,6 +100,10 @@ public class CommunicationMCP {
     
             // Receive the packet
             socket.receive(packet);
+
+
+
+            socket.setSoTimeout(2000);
     
     
             InetAddress inetAddresses = packet.getAddress();
@@ -55,7 +111,8 @@ public class CommunicationMCP {
             int port = packet.getPort();
     
             String jsonString = new String(packet.getData(), 0, packet.getLength());
-                System.out.println("Received JSON: " + jsonString);
+            
+            System.out.println("Received JSON: " + jsonString);
     
                 // Parse JSON string to JSONObject
                 JSONObject jsonObject = new JSONObject(jsonString);
@@ -68,22 +125,26 @@ public class CommunicationMCP {
             //send back
             JSONObject sendObject = new JSONObject();
 
-            sendObject= THECCP.toMCPStatus();
+            String responseJson = sendObject.toString();
+
+            //sendObject= 
+            
+            THECCP.sendUdpPacket(responseJson);
     
                 // Convert JSONObject back to JSON string
-                String responseJson = sendObject.toString();
+                
     
-                byte[] sendBuffer = responseJson.getBytes();
+           //     byte[] sendBuffer = responseJson.getBytes();
     
             
             //send back
-            DatagramPacket sendback = new DatagramPacket(sendBuffer, sendBuffer.length, inetAddresses, port);
+         //   DatagramPacket sendback = new DatagramPacket(sendBuffer, sendBuffer.length, inetAddresses, port);
               // Convert the JSON string to a Java object
             
               // Print the received data
           
     
-            socket.send(sendback);
+        //    socket.send(sendback);
           
     
             // Close the socket
