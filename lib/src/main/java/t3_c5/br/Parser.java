@@ -1,56 +1,45 @@
 package t3_c5.br;
 
 import org.json.JSONObject;
-import java.time.LocalDateTime;
 import java.util.Random;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 public class Parser {
-    
+
     private String status;
     private String ipAddress;
     private int port;
+    private int sequenceNumber;
 
-    private int outgoingSequenceNumber;
-    private int incomingSequenceNumber;
 
-    public Parser(){
+    public Parser() {
 
     }
 
     // Constructor
-    public Parser(String status, String ipAddress, int port) {
+    public Parser(String status, String ipAddress, int port, int sequence) {
         this.status = status;
         this.ipAddress = ipAddress;
         this.port = port;
-
-        this.outgoingSequenceNumber = 0;
-        this.incomingSequenceNumber = 0;
+        this.sequenceNumber = sequence;
     }
 
-    // Initialize sequence numbers from the MCP
-    public void initializeSequenceNumbers(int receivedSequenceNumber) {
-        this.incomingSequenceNumber = receivedSequenceNumber;  // Set the incoming sequence number from MCP
-        
-        // Generate a random outgoing sequence number for our side
-        Random rand = new Random();
-        this.outgoingSequenceNumber = rand.nextInt(10000);
-        
-        // Outgoing sequence number is ready for use in further messages
-    }
-
-    // Method to create a JSON status message to send to the Master Carriage Program (MCP)
+    // Method to create a JSON status message to send to the Master Carriage Program
+    // (MCP)
     public JSONObject toMCP(String message) {
         JSONObject statusMessage = new JSONObject();
         try {
-            statusMessage.put("client_type:", "CarriageControlProgram");
+            statusMessage.put("client_type:", "CCP");
             statusMessage.put("message:", message);
             statusMessage.put("client_id:", CommunicationMCP.client_id);
-            statusMessage.put("sequence_number:", outgoingSequenceNumber);
-            statusMessage.optString("status:", this.status);
-            outgoingSequenceNumber++;
+            statusMessage.put("sequence_number:", sequenceNumber);
+
+            if (message.trim().equals("STAT")) {
+                statusMessage.put("status:", this.status);
+            }
+            sequenceNumber++;
         } catch (Exception e) {
             System.out.println("Error creating status JSON: " + e.getMessage());
         }
@@ -62,14 +51,26 @@ public class Parser {
         try {
             String action = execCommand.optString("action:");
             String message = execCommand.getString("message:");
-            
-            if (message.trim().equals("EXEC")) {
-                sendUdpPacket(action);  // Send action as a UDP packet
-            } else if(message.trim().equals("STRQ")) {
-                sendUdpPacket(message);  // Send STAT message as a UDP packet
-            } else {
-                CommunicationMCP.setMessage("" + message);
+
+            switch(message){
+
+            case "EXEC":
+                sendUdpPacket(action); // Send action as a UDP packet
+                break;
+            case "STRQ":
+                sendUdpPacket(message); // Send STAT message as a UDP packet
+                break;
+            case "AKIN":
+                break;
+            case "ASKT":
+                break;
+            default:
+                toMCP("NOIP");
+                break;
             }
+
+            sequenceNumber++;
+
         } catch (Exception e) {
             System.out.println("Error processing execution JSON: " + e.getMessage());
         }
@@ -91,26 +92,25 @@ public class Parser {
 
     public void receiveUdpPacket() {
         try {
-            DatagramSocket socket = new DatagramSocket(port);  // Listen on the same port
-            byte[] buffer = new byte[1024];  // Buffer to store received data
+            DatagramSocket socket = new DatagramSocket(port); // Listen on the same port
+            byte[] buffer = new byte[1024]; // Buffer to store received data
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-            
+
             System.out.println("Waiting for UDP packet...");
-            socket.receive(packet);  // Receive packet (blocking call)
-            
+            socket.receive(packet); // Receive packet (blocking call)
+
             String receivedMessage = new String(packet.getData(), 0, packet.getLength());
             System.out.println("Received message: " + receivedMessage);
-            
+
             // Update the status based on the received message
-            this.status = receivedMessage.trim();  // Trim any trailing whitespace
+            this.status = receivedMessage.trim(); // Trim any trailing whitespace
             System.out.println("Updated status: " + this.status);
-            
+
             socket.close();
         } catch (Exception e) {
             System.out.println("Error receiving UDP packet: " + e.getMessage());
         }
     }
-
 
     // Getters and Setters for encapsulation
     public String getStatus() {
@@ -119,5 +119,13 @@ public class Parser {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getSequenceNumber(){
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(int sequence){
+        this.sequenceNumber = sequence;
     }
 }
