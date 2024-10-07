@@ -1,7 +1,6 @@
 package t3_c5.br;
 
 import org.json.JSONObject;
-import java.util.Random;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
