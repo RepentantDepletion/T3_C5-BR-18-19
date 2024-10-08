@@ -1,23 +1,29 @@
-//package t3_c5.br;
+#include <stdio.h>
+#include <string.h>
 
-public class DoorControl {
-    private String doorStatus;
+// DoorControl structure
+typedef struct {
+    char doorStatus[10]; // Door status as a string
+} DoorControl;
 
-    public DoorControl() {
-        this.doorStatus = "closed"; // Default status
-    }
+// Function to initialize the DoorControl structure
+void initDoorControl(DoorControl *dc) {
+    strcpy(dc->doorStatus, "closed"); // Default status
+}
 
-    public String getDoorStatus() {
-        return doorStatus;
-    }
+// Function to get the current door status
+const char* getDoorStatus(DoorControl *dc) {
+    return dc->doorStatus;
+}
 
-    public void openDoor() {
-        this.doorStatus = "open";
-        System.out.println("Door opened.");
-    }
+// Function to open the door
+void openDoor(DoorControl *dc) {
+    strcpy(dc->doorStatus, "open");
+    printf("Door opened.\n");
+}
 
-    public void closeDoor() {
-        this.doorStatus = "closed";
-        System.out.println("Door closed.");
-    }
+// Function to close the door
+void closeDoor(DoorControl *dc) {
+    strcpy(dc->doorStatus, "closed");
+    printf("Door closed.\n");
 }
