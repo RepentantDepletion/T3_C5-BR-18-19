@@ -1,8 +1,8 @@
 #define package t3_c5.br;
 
-#include "C:\Users\iaml2\Documents\T3_C5-BR-18-19\lib\src\main\java\SpeedManagement.c"
-#include "C:\Users\iaml2\Documents\T3_C5-BR-18-19\lib\src\main\java\DoorControl.c"
-#include "C:\Users\iaml2\Documents\T3_C5-BR-18-19\lib\src\main\java\SensorFeedback.c"
+#include "C:\Users\iaml2\Documents\T3_C5-BR-18-19\lib\src\main\java\t3_c5\br\SpeedManagement.c"
+#include "C:\Users\iaml2\Documents\T3_C5-BR-18-19\lib\src\main\java\t3_c5\br\DoorControl.c"
+#include "C:\Users\iaml2\Documents\T3_C5-BR-18-19\lib\src\main\java\t3_c5\br\SensorFeedback.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
