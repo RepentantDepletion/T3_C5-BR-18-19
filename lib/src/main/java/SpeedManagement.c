@@ -6,10 +6,22 @@ typedef struct {
     int isSpeedSet;
 } SpeedManagement;
 
+SpeedManagement* createSpeedManagement() {
+    SpeedManagement* sm = (SpeedManagement*) malloc(sizeof(SpeedManagement));
+    if (sm != NULL) {
+        sm->currentSpeed = 0.0;
+        sm->isSpeedSet = 0;
+    }
+    return sm;
+}
+
+
+/*
 void initSpeedManagement(SpeedManagement *sm) {
     sm->currentSpeed = 0.0;
     sm->isSpeedSet = 0;
 }
+*/
 
 void setSpeed(SpeedManagement *sm, float speed) {
     // actual speed setting
