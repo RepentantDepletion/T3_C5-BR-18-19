@@ -1,3 +1,5 @@
+#define package t3_c5.br;
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,27 +73,16 @@ void storeComponentData(DataProcessing *dp, const char *key, const char *data) {
     }
 }
 
-void sendRelevantDataToMCP(DataProcessing *dp) {
-    printf("Sending data to MCP:\n");
-    printf("Door Status: %s\n", dp->commandData[2].value);
-    printf("Status: %s\n", dp->commandData[3].value);
-    printf("Station ID: %s\n", getStationID(dp));
+void executeCommand(DataProcessing *dp, const char *Command) {
+    char action[10];
+    sscanf(Command, "%s", action);
 
-    for (int i = 0; i < dp->componentCount; i++) {
-        if (strcmp(dp->componentData[i].key, "feedback") == 0) {
-            printf("Feedback: %s\n", dp->componentData[i].value);
-        }
-    }
-}
 
-void executeMCPCommand(DataProcessing *dp, const char *execCommand) {
-    char action[MAX_KEY_LENGTH];
-    char value[MAX_VALUE_LENGTH];
-    sscanf(execCommand, "%s %s", action, value);
-
-    if (strcmp(action, "update_speed") == 0) {
+    switch(Command)
+    case "FFASTC":
+        SpeedManagement.increaseSpeed();
+    if (strcmp(action, "FFASTC") == 0) {
         strcpy(dp->commandData[1].key, "speed");
-        strcpy(dp->commandData[1].value, value);
     } else if (strcmp(action, "open_door") == 0) {
         strcpy(dp->commandData[2].key, "doorStatus");
         strcpy(dp->commandData[2].value, "open");

@@ -95,7 +95,7 @@ public class Parser {
         }
     }
 
-    public void receiveUdpPacket() {
+    public String receiveUdpPacket() {
         try {
             DatagramSocket socket = new DatagramSocket(port); // Listen on the same port
             byte[] buffer = new byte[1024]; // Buffer to store received data
@@ -107,19 +107,18 @@ public class Parser {
             String receivedMessage = new String(packet.getData(), 0, packet.getLength());
             System.out.println("Received message: " + receivedMessage);
 
-            // Update the status based on the received message
-            this.status = receivedMessage.trim(); // Trim any trailing whitespace
-            System.out.println("Updated status: " + this.status);
-
             socket.close();
+
+            return receivedMessage;
         } catch (Exception e) {
             errCount++;
             if (errCount >= 5) {
                 System.out.println("Connection with BR lost");
+                return "Error with connection";
             } else {
                 System.out.println("Error receiving UDP packet: " + e.getMessage());
                 System.out.println("Retrying.....");
-                receiveUdpPacket();
+                return receiveUdpPacket();
             }
         }
     }
