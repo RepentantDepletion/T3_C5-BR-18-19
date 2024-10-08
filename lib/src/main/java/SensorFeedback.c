@@ -1,18 +1,23 @@
-//package t3_c5.br;
+#include <stdio.h>
+#include <string.h>
 
-public class SensorFeedback {
-    private String sensorStatus;
+// SensorFeedback structure
+typedef struct {
+    char sensorStatus[20]; // Sensor status as a string
+} SensorFeedback;
 
-    public SensorFeedback() {
-        this.sensorStatus = "normal"; // Default sensor status
-    }
+// Function to initialize the SensorFeedback structure
+void initSensorFeedback(SensorFeedback *sf) {
+    strcpy(sf->sensorStatus, "normal"); // Default sensor status
+}
 
-    public String getSensorStatus() {
-        return sensorStatus;
-    }
+// Function to get the current sensor status
+const char* getSensorStatus(SensorFeedback *sf) {
+    return sf->sensorStatus;
+}
 
-    public void updateSensorStatus(String status) {
-        this.sensorStatus = status;
-        System.out.println("Sensor status updated to: " + sensorStatus);
-    }
+// Function to update the sensor status
+void updateSensorStatus(SensorFeedback *sf, const char* status) {
+    strcpy(sf->sensorStatus, status);
+    printf("Sensor status updated to: %s\n", sf->sensorStatus);
 }
