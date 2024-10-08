@@ -50,9 +50,6 @@ public class CommunicationMCP {
             // Create a DatagramPacket to send
             DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
 
-            // Create a DatagramSocket
-            // DatagramSocket socket = new DatagramSocket();
-
             // Send the packet
             socket.send(sendPacket);
 
@@ -101,7 +98,10 @@ public class CommunicationMCP {
             // Parse JSON string to JSONObject
             JSONObject jsonObject = new JSONObject(jsonString);
 
+
             recieved = jsonObject;
+
+            THECCP.fromMCP(recieved);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,26 +111,36 @@ public class CommunicationMCP {
 
     void sendPacket(JSONObject isaac) {
 
-        recieveMessages(recieved);
+        try {
+            JSONObject sendit= new JSONObject();
+            InetAddress inetAddresses = InetAddress.getByName("10.20.30.1");
+            int port = 2000;
 
-        if (message == "STRQ") {
-            // send status message
-            THECCP.toMCP(message);
-        } else if (message == "EXEC") {
-            // send Acknowledge Command
-            THECCP.fromMCP(recieved);
 
+            // get message from parser
+           String putMessage= THECCP.receiveUdpPacket();
+
+           //get json object to send from the parser
+            sendit=THECCP.toMCP(putMessage);
+
+             // Convert JSONObject back to JSON string
+            String responseJson= sendit.toString();
+           
+            byte[] sendBuffer = responseJson.getBytes();
+
+            // send back
+            DatagramPacket sendback = new DatagramPacket(sendBuffer, sendBuffer.length, inetAddresses, port);
+
+            // Convert the JSON string to a Java object
+            // Print the received data
+
+            socket.send(sendback);
+
+            // Close the socket
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        return;
-    }
-
-    public void recieveMessages(JSONObject array) {
-        this.clienttype = (String) array.get("clienttype");
-        CommunicationMCP.message = (String) array.get("message");
-        CommunicationMCP.client_id = (String) array.get("client_id");
-        this.timestamp = (String) array.get("timestamp");
-        this.action = (String) array.get("action");
     }
 
 }

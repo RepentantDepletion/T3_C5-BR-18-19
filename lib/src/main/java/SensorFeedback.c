@@ -1,5 +1,5 @@
 //package t3_c5.br;
-
+/*
 public class SensorFeedback {
     private String sensorStatus;
 
