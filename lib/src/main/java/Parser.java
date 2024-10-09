@@ -10,7 +10,6 @@ public class Parser {
     private String ipAddress;
     private int port;
     private int sequenceNumber;
-    private int errCount;
 
     public Parser() {
 
@@ -104,20 +103,29 @@ public class Parser {
         int retryCount = 0;
         boolean success = false;
         String receivedMessage = "";
-
+    
         while (retryCount < 5 && !success) {
             try {
                 DatagramSocket socket = new DatagramSocket(port); // Listen on the same port
+                socket.setSoTimeout(2000); // Set timeout to 2000 milliseconds (2 seconds)
+    
                 byte[] buffer = new byte[1024]; // Buffer to store received data
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-
+    
                 System.out.println("Waiting for UDP packet...");
                 socket.receive(packet); // Receive packet (blocking call)
-
+    
                 receivedMessage = new String(packet.getData(), 0, packet.getLength());
                 System.out.println("Received message: " + receivedMessage);
                 socket.close();
                 success = true; // Packet received successfully, exit loop.
+            } catch (java.net.SocketTimeoutException e) {
+                retryCount++;
+                System.out.println("Receive timed out. Retrying... (Attempt " + retryCount + ")");
+                if (retryCount >= 5) {
+                    System.out.println("Connection with BR lost after multiple timeouts");
+                    return "Error with connection";
+                }
             } catch (Exception e) {
                 retryCount++;
                 System.out.println("Error receiving UDP packet: " + e.getMessage());
@@ -131,6 +139,7 @@ public class Parser {
         }
         return receivedMessage;
     }
+    
 
     // Getters and Setters for encapsulation
     public String getStatus() {
@@ -147,9 +156,5 @@ public class Parser {
 
     public void setSequenceNumber(int sequence) {
         this.sequenceNumber = sequence;
-    }
-
-    public void resetErrorCount() {
-        errCount = 0;
     }
 }
