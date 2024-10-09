@@ -1,5 +1,4 @@
 
-
 import org.json.JSONObject;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
@@ -79,7 +78,7 @@ public class Parser {
     public void sendUdpPacket(String message) {
         int retryCount = 0;
         boolean success = false;
-        
+
         while (retryCount < 5 && !success) {
             try {
                 DatagramSocket socket = new DatagramSocket();
@@ -100,22 +99,21 @@ public class Parser {
             }
         }
     }
-    
 
     public String receiveUdpPacket() {
         int retryCount = 0;
         boolean success = false;
         String receivedMessage = "";
-        
+
         while (retryCount < 5 && !success) {
             try {
                 DatagramSocket socket = new DatagramSocket(port); // Listen on the same port
                 byte[] buffer = new byte[1024]; // Buffer to store received data
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-    
+
                 System.out.println("Waiting for UDP packet...");
                 socket.receive(packet); // Receive packet (blocking call)
-    
+
                 receivedMessage = new String(packet.getData(), 0, packet.getLength());
                 System.out.println("Received message: " + receivedMessage);
                 socket.close();
@@ -133,7 +131,6 @@ public class Parser {
         }
         return receivedMessage;
     }
-    
 
     // Getters and Setters for encapsulation
     public String getStatus() {
