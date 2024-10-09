@@ -77,51 +77,63 @@ public class Parser {
 
     // Method to send a UDP packet
     public void sendUdpPacket(String message) {
-        try {
-            DatagramSocket socket = new DatagramSocket();
-            byte[] buffer = message.getBytes();
-            InetAddress address = InetAddress.getByName(ipAddress);
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
-            socket.send(packet);
-            socket.close();
-        } catch (Exception e) {
-            if (errCount >= 5) {
-                System.out.println("Connection with BR lost");
-            } else {
+        int retryCount = 0;
+        boolean success = false;
+        
+        while (retryCount < 5 && !success) {
+            try {
+                DatagramSocket socket = new DatagramSocket();
+                byte[] buffer = message.getBytes();
+                InetAddress address = InetAddress.getByName(ipAddress);
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
+                socket.send(packet);
+                socket.close();
+                success = true; // Packet sent successfully, exit loop.
+            } catch (Exception e) {
+                retryCount++;
                 System.out.println("Error sending UDP packet: " + e.getMessage());
-                System.out.println("Retrying.....");
-                sendUdpPacket(message);
+                if (retryCount >= 5) {
+                    System.out.println("Connection with BR lost");
+                } else {
+                    System.out.println("Retrying.....");
+                }
             }
         }
     }
+    
 
     public String receiveUdpPacket() {
-        try {
-            DatagramSocket socket = new DatagramSocket(port); // Listen on the same port
-            byte[] buffer = new byte[1024]; // Buffer to store received data
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-
-            System.out.println("Waiting for UDP packet...");
-            socket.receive(packet); // Receive packet (blocking call)
-
-            String receivedMessage = new String(packet.getData(), 0, packet.getLength());
-            System.out.println("Received message: " + receivedMessage);
-
-            socket.close();
-
-            return receivedMessage;
-        } catch (Exception e) {
-            errCount++;
-            if (errCount >= 5) {
-                System.out.println("Connection with BR lost");
-                return "Error with connection";
-            } else {
+        int retryCount = 0;
+        boolean success = false;
+        String receivedMessage = "";
+        
+        while (retryCount < 5 && !success) {
+            try {
+                DatagramSocket socket = new DatagramSocket(port); // Listen on the same port
+                byte[] buffer = new byte[1024]; // Buffer to store received data
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+    
+                System.out.println("Waiting for UDP packet...");
+                socket.receive(packet); // Receive packet (blocking call)
+    
+                receivedMessage = new String(packet.getData(), 0, packet.getLength());
+                System.out.println("Received message: " + receivedMessage);
+                socket.close();
+                success = true; // Packet received successfully, exit loop.
+            } catch (Exception e) {
+                retryCount++;
                 System.out.println("Error receiving UDP packet: " + e.getMessage());
-                System.out.println("Retrying.....");
-                return receiveUdpPacket();
+                if (retryCount >= 5) {
+                    System.out.println("Connection with BR lost");
+                    return "Error with connection";
+                } else {
+                    System.out.println("Retrying.....");
+                }
             }
         }
+        return receivedMessage;
     }
+    
 
     // Getters and Setters for encapsulation
     public String getStatus() {
