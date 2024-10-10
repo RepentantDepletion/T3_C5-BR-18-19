@@ -92,6 +92,7 @@ public class Parser {
                 System.out.println("Error sending UDP packet: " + e.getMessage());
                 if (retryCount >= 5) {
                     System.out.println("Connection with BR lost");
+                    CommunicationMCP.sendPacket(toMCP("ERR"));
                 } else {
                     System.out.println("Retrying.....");
                 }
@@ -124,14 +125,14 @@ public class Parser {
                 System.out.println("Receive timed out. Retrying... (Attempt " + retryCount + ")");
                 if (retryCount >= 5) {
                     System.out.println("Connection with BR lost after multiple timeouts");
-                    return "Error with connection";
+                    return "ERR";
                 }
             } catch (Exception e) {
                 retryCount++;
                 System.out.println("Error receiving UDP packet: " + e.getMessage());
                 if (retryCount >= 5) {
                     System.out.println("Connection with BR lost");
-                    return "Error with connection";
+                    return "ERR";
                 } else {
                     System.out.println("Retrying.....");
                 }
