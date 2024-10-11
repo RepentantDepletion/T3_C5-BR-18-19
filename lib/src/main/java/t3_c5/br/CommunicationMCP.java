@@ -12,13 +12,6 @@ import java.net.DatagramPacket;
 
 public class CommunicationMCP {
 
-    String clienttype;
-    static String message;
-    static String client_id;
-    String timestamp;
-    String action;
-    String station_id;
-
     DatagramSocket socket;
 
     Parser THECCP;
@@ -36,7 +29,7 @@ public class CommunicationMCP {
         message = Message;
     }
 
-    void handshake() {
+    void handshake(String bladerunner) {
         try {
             // use parser method to send json init with CCIN messae
             JSONObject sendJson = THECCP.toMCP("CCIN");
@@ -63,7 +56,7 @@ public class CommunicationMCP {
             // Check if the received JSON matches the expected values
             if (receiveJson.getString("client_type").equals("CCP") &&
                     receiveJson.getString("message").equals("AKIN") &&
-                    receiveJson.getString("client_id").equals("BR18") &&
+                    receiveJson.getString("client_id").equals(bladerunner) &&
                     receiveJson.getString("sequence_number").equals("s_mcp")) {
                 System.out.println("Received expected JSON response.");
             } else {
