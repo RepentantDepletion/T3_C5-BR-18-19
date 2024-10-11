@@ -1,4 +1,3 @@
-
 import org.json.JSONObject;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
@@ -44,10 +43,10 @@ public class Parser {
     }
 
     // Method to parse incoming JSON commands from the Master Carriage Program (MCP)
-    public void fromMCP(JSONObject execCommand) {
+    public void fromMCP(JSONObject Command) {
         try {
-            String action = execCommand.optString("action:");
-            String message = execCommand.getString("message:");
+            String action = Command.optString("action:");
+            String message = Command.getString("message:");
 
             switch (message) {
 
@@ -55,14 +54,14 @@ public class Parser {
                     sendUdpPacket(action); // Send action as a UDP packet
                     break;
                 case "STRQ":
-                    sendUdpPacket(message); // Send STAT message as a UDP packet
+                    sendUdpPacket(message); // Send STRQ message as a UDP packet
                     break;
                 case "AKIN":
                     break;
                 case "ASKT":
                     break;
                 default:
-                    toMCP("NOIP");
+                    toMCP("NOIP"); // Create a NOIP message
                     break;
             }
 
@@ -92,6 +91,7 @@ public class Parser {
                 System.out.println("Error sending UDP packet: " + e.getMessage());
                 if (retryCount >= 5) {
                     System.out.println("Connection with BR lost");
+                    CommunicationMCP.sendPacket(toMCP("ERR"));
                 } else {
                     System.out.println("Retrying.....");
                 }
@@ -107,13 +107,13 @@ public class Parser {
         while (retryCount < 5 && !success) {
             try {
                 DatagramSocket socket = new DatagramSocket(port); // Listen on the same port
-                socket.setSoTimeout(2000); // Set timeout to 2000 milliseconds (2 seconds)
+                socket.setSoTimeout(3000); // Set timeout to 3000 milliseconds (3 seconds)
     
                 byte[] buffer = new byte[1024]; // Buffer to store received data
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
     
                 System.out.println("Waiting for UDP packet...");
-                socket.receive(packet); // Receive packet (blocking call)
+                socket.receive(packet); // Receive packet
     
                 receivedMessage = new String(packet.getData(), 0, packet.getLength());
                 System.out.println("Received message: " + receivedMessage);
@@ -124,14 +124,14 @@ public class Parser {
                 System.out.println("Receive timed out. Retrying... (Attempt " + retryCount + ")");
                 if (retryCount >= 5) {
                     System.out.println("Connection with BR lost after multiple timeouts");
-                    return "Error with connection";
+                    return "ERR";
                 }
             } catch (Exception e) {
                 retryCount++;
                 System.out.println("Error receiving UDP packet: " + e.getMessage());
                 if (retryCount >= 5) {
                     System.out.println("Connection with BR lost");
-                    return "Error with connection";
+                    return "ERR";
                 } else {
                     System.out.println("Retrying.....");
                 }
