@@ -18,7 +18,7 @@ void updateSensorStatus(SensorFeedback *sf, const char* status) {
     printf("Sensor status updated to: %s\n", sf->sensorStatus);
 }
 */
-
+#include <jni.h>
 #include <stdio.h>
 #include <string.h>
 

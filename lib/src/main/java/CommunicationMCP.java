@@ -1,4 +1,4 @@
-package t3_c5.br;
+
 
 import org.json.*;
 import java.io.IOException;
@@ -12,15 +12,24 @@ import java.net.DatagramPacket;
 
 public class CommunicationMCP {
 
-    DatagramSocket socket;
+   // DatagramSocket socket;
+    String clienttype;
+    static String message;
+    static String client_id;
+    String timestamp;
+    String action;
+    String station_id;
 
-    Parser THECCP;
+    static DatagramSocket socket;
+
+    static Parser THECCP;
 
     JSONObject recieved;
 
     public CommunicationMCP(DatagramSocket socket, Parser THECCP, String client_id) {
         this.socket = socket;
         this.THECCP = THECCP;
+        this.client_id= client_id;
 
     }
 
@@ -29,7 +38,7 @@ public class CommunicationMCP {
         message = Message;
     }
 
-    void handshake(String bladerunner) {
+    void handshake() {
         try {
             // use parser method to send json init with CCIN messae
             JSONObject sendJson = THECCP.toMCP("CCIN");
@@ -56,7 +65,7 @@ public class CommunicationMCP {
             // Check if the received JSON matches the expected values
             if (receiveJson.getString("client_type").equals("CCP") &&
                     receiveJson.getString("message").equals("AKIN") &&
-                    receiveJson.getString("client_id").equals(bladerunner) &&
+                    receiveJson.getString("client_id").equals(client_id) &&
                     receiveJson.getString("sequence_number").equals("s_mcp")) {
                 System.out.println("Received expected JSON response.");
             } else {
@@ -102,7 +111,7 @@ public class CommunicationMCP {
         // return recieved;
     }
 
-    void sendPacket(JSONObject isaac) {
+    static void sendPacket(JSONObject isaac) {
 
         try {
             JSONObject sendit= new JSONObject();
@@ -111,12 +120,14 @@ public class CommunicationMCP {
 
 
             // get message from parser
-           String putMessage= THECCP.receiveUdpPacket();
+            String putMessage= THECCP.receiveUdpPacket();
+
+            THECCP.setStatus(putMessage);
 
            //get json object to send from the parser
             sendit=THECCP.toMCP(putMessage);
 
-             // Convert JSONObject back to JSON string
+            // Convert JSONObject back to JSON string
             String responseJson= sendit.toString();
            
             byte[] sendBuffer = responseJson.getBytes();
