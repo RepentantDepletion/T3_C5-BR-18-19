@@ -1,29 +1,8 @@
-//package t3_c5.br;
-
-public class DoorControl {
-    private String doorStatus;
-
-    public DoorControl() {
-        this.doorStatus = "closed"; // Default status
-    }
-
-    public String getDoorStatus() {
-        return doorStatus;
-    }
-
-    public void openDoor() {
-        this.doorStatus = "open";
-        System.out.println("Door opened.");
-    }
-
-    public void closeDoor() {
-        this.doorStatus = "closed";
-        System.out.println("Door closed.");
-    }
-}
-#include <ESP32Servo.h>
+#include <ESP32Servo.h>   // ignore red line
 #include <stdio.h>
 #include <string.h>
+#include <jni.h>
+
 
 // static const int servoPin = 13; // change servo pin based on what motions setup their 
 
