@@ -120,6 +120,8 @@ public class CommunicationMCP {
             // get message from parser
             String putMessage= THECCP.receiveUdpPacket();
 
+            THECCP.setStatus(putMessage);
+
            //get json object to send from the parser
             sendit=THECCP.toMCP(putMessage);
 
