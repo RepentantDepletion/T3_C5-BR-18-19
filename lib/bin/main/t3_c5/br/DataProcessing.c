@@ -12,11 +12,10 @@
 #define SERVER_PORT_DEFAULT 3018
 #define SERVER_IP "10.20.30.1"
 #define BUFFER_SIZE 1024
-#define MAX_KEY_LENGTH 50  // Define max key length for station ID
 
 // Global Variables
 int sockfd;
-struct sockaddr_in server_addr, client_addr;
+struct sockaddr_in server_addr, local_addr, client_addr;
 socklen_t client_len = sizeof(client_addr);
 
 // DataProcessing struct to hold all components
@@ -77,8 +76,7 @@ void receivePacket(char *buffer) {
 
 // Handle station ID setting
 void setStationID(DataProcessing *dp, const char *stationID) {
-    strncpy(dp->stationID, stationID, MAX_KEY_LENGTH - 1);
-    dp->stationID[MAX_KEY_LENGTH - 1] = '\0';  // Ensure null termination
+    strncpy(dp->stationID, stationID, MAX_KEY_LENGTH);
 }
 
 // Retrieve station ID
@@ -114,23 +112,4 @@ void executeCommand(DataProcessing* dp, const char* command) {
 void sendCarriageMessage(const char *message) {
     printf("Sending message to Carriage Control Program: %s\n", message);
     sendPacket(message);
-}
-
-// Main function
-int main() {
-    DataProcessing dp;
-    initDataProcessing(&dp);
-
-    connectionStartBR(18);  // Example of starting connection with BR ID 18
-
-    char buffer[BUFFER_SIZE];
-
-    while (1) {
-        receivePacket(buffer);  // Continuously listen for incoming packets
-        executeCommand(&dp, buffer);  // Execute commands based on received packets
-    }
-
-    // Close socket before exiting
-    close(sockfd);
-    return 0;
 }
