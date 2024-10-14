@@ -8,6 +8,8 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <jni.h>
+
 
 #define SERVER_PORT_DEFAULT 3018
 #define SERVER_IP "10.20.30.1"

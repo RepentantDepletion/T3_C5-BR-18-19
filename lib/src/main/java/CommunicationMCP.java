@@ -12,6 +12,7 @@ import java.net.DatagramPacket;
 
 public class CommunicationMCP {
 
+   // DatagramSocket socket;
     String clienttype;
     static String message;
     static String client_id;
@@ -28,6 +29,7 @@ public class CommunicationMCP {
     public CommunicationMCP(DatagramSocket socket, Parser THECCP, String client_id) {
         this.socket = socket;
         this.THECCP = THECCP;
+        this.client_id= client_id;
 
     }
 
@@ -63,7 +65,7 @@ public class CommunicationMCP {
             // Check if the received JSON matches the expected values
             if (receiveJson.getString("client_type").equals("CCP") &&
                     receiveJson.getString("message").equals("AKIN") &&
-                    receiveJson.getString("client_id").equals("BR18") &&
+                    receiveJson.getString("client_id").equals(client_id) &&
                     receiveJson.getString("sequence_number").equals("s_mcp")) {
                 System.out.println("Received expected JSON response.");
             } else {

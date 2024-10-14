@@ -1,6 +1,8 @@
 #include <ESP32Servo.h>
 #include <stdio.h>
 #include <string.h>
+#include <jni.h>
+
 
 // Define the servo pin to control the motor speed
 static const int servoPin = 14;  // You can change this pin based on your setup
