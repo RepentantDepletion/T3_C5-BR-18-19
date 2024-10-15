@@ -38,7 +38,7 @@ public class CommunicationMCP {
         message = Message;
     }
 
-    void handshake() {
+    void handshake() { // use to be static
         try {
             // use parser method to send json init with CCIN messae
             JSONObject sendJson = THECCP.toMCP("CCIN");
