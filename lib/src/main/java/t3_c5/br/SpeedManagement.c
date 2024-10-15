@@ -1,8 +1,6 @@
 #include <ESP32Servo.h>
 #include <stdio.h>
 #include <string.h>
-#include <jni.h>
-
 
 // Define the servo pin to control the motor speed
 static const int servoPin = 14;  // You can change this pin based on your setup
@@ -14,7 +12,7 @@ void initSpeedManagement() {
     // Attach the motorServo to the defined pin
     motorServo.attach(servoPin);
 
-    // Initial print message
+    // Start the serial communication for debugging
     Serial.begin(115200);
     Serial.println("Speed management initialized.");
 }
@@ -80,79 +78,8 @@ void stopMotor() {
 void setup() {
     // Initialize the speed management system
     initSpeedManagement();
-    /*
-    // Example usage
-    setSpeed(90);       // Set the speed to 90 degrees (mid-range)
-    delay(2000);        // Hold the speed for 2 seconds
-
-    increaseSpeed();    // Gradually increase speed
-    delay(2000);        // Hold the maximum speed for 2 seconds
-
-    decreaseSpeed();    // Gradually decrease speed
-    delay(2000);        // Hold the minimum speed for 2 seconds
-
-    stopMotor();        // Stop the motor
-    */
 }
 
 void loop() {
-    // to do real time updates
+    // Placeholder for real-time updates
 }
-
-
-
-/*#include <stdio.h>
-#include <stdlib.h>
-
-typedef struct {
-    float currentSpeed;
-    int isSpeedSet;
-} SpeedManagement;
-
-SpeedManagement* createSpeedManagement() {
-    SpeedManagement* sm = (SpeedManagement*) malloc(sizeof(SpeedManagement));
-    if (sm != NULL) {
-        sm->currentSpeed = 0.0;
-        sm->isSpeedSet = 0;
-    }
-    return sm;
-}
-
-
-void initSpeedManagement(SpeedManagement *sm) {
-    sm->currentSpeed = 0.0;
-    sm->isSpeedSet = 0;
-}
-
-void setSpeed(SpeedManagement *sm, float speed) {
-    // actual speed setting
-    sm->currentSpeed = speed;
-    sm->isSpeedSet = 1; // checks if the speed was set
-    printf("Speed set to: %.2f cm/s\n", sm->currentSpeed);
-}
-
-int confirmSpeedSet(SpeedManagement *sm) {
-    // confirms if the speed was successfully set
-    return sm->isSpeedSet;
-}
-
-float getCurrentSpeed(SpeedManagement *sm) {
-    return sm->currentSpeed;
-}
-
-
-
-//test function
-int main() {
-    SpeedManagement sm;
-    initSpeedManagement(&sm);
-
-    setSpeed(&sm, 75.0);
-    if (confirmSpeedSet(&sm)) {
-        printf("Speed was successfully set!\n");
-    } else {
-        printf("Failed to set speed.\n");
-    }
-    return 0;
-}
-*/
