@@ -43,8 +43,6 @@ void checkForLight(IRSensor* irSensor) {
         irSensor->isLightDetected = 1;  // Update sensor state to detected
         printf("Light detected! Stopping motor and opening door...\n");
 
-        stopMotor();  // Stop the motor using SpeedManagement
-        openDoor();   // Open the door using DoorControl
     } else if (sensorValue == 0 && irSensor->isLightDetected == 1) {
         // Light no longer detected, reset the sensor state
         irSensor->isLightDetected = 0;  // Reset sensor state
