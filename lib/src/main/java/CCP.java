@@ -12,7 +12,7 @@ public class CCP {
    // CommunicationFromMCP mcpInput;
   //  CommunicationToMCP mcpOutput;
 
-    DataProcessing data;
+    //DataProcessing data;
     Acceleration accInput;
 
     public static void main(String args[]) {
