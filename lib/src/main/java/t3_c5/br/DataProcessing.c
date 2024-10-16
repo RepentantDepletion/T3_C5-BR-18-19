@@ -1,5 +1,123 @@
 #define PACKAGE t3_c5_br
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "SpeedManagement.c"
+#include "DoorControl.c"
+#include "SensorFeedback.c"
+#include "UltrasonicSensor.c"
+#include "IRSensor.c"
+#include "LightStatus.c"
+#include "Main.c"
+#include "DataProcessing.c"
 
+// Define the structures for each component
+typedef struct {
+    int speed; // Speed value
+} SpeedManagement;
+
+typedef struct {
+    int doorStatus; // Door status
+    int lightStatus; // Light status
+    int mainStatus; // Main status
+} DoorControl;
+
+typedef struct {
+    char sensorFeedback[100]; // Sensor feedback message
+} SensorFeedback;
+
+typedef struct {
+    int sensorStatus; // Sensor status
+} UltrasonicSensor;
+
+typedef struct {
+    int sensorStatus; // Sensor status
+} IRSensor;
+
+typedef struct {
+    int lightStatus; // Light status
+} LightStatus;
+
+typedef struct {
+    int mainStatus; // Main status
+} MainStatus;
+
+// Define the functions for each component
+void initSpeedManagement(SpeedManagement* speedManagement) {
+    speedManagement->speed = 0; // Initialize speed to 0
+}
+
+void initDoorControl(DoorControl* doorControl) { // * = pointer
+    doorControl->doorStatus = 0; // Initialize door status to 0
+    doorControl->lightStatus = 0; // Initialize light status to 0
+    doorControl->mainStatus = 0; // Initialize main status to 0
+}
+
+void initSensorFeedback(SensorFeedback* sensorFeedback) {
+    strcpy(sensorFeedback->sensorFeedback, "No feedback"); // Initialize sensor feedback to "No feedback"
+}
+
+void initUltrasonicSensor(UltrasonicSensor* ultrasonicSensor) {
+    ultrasonicSensor->sensorStatus = 0; // Initialize ultrasonic sensor status to 0
+}
+
+void initIRSensor(IRSensor* irSensor) {
+    irSensor->sensorStatus = 0; // Initialize IR sensor status to 0
+}
+
+void initLightStatus(LightStatus* lightStatus) {
+    lightStatus->lightStatus = 0; // Initialize light status to 0
+}
+
+void initMainStatus(MainStatus* mainStatus) {
+    mainStatus->mainStatus = 0; // Initialize main status to 0
+}
+
+void updateSensorFeedback(SensorFeedback* sensorFeedback, int ultrasonicSensorStatus, int irSensorStatus) {
+    // Update sensor feedback based on sensor statuses
+    if (ultrasonicSensorStatus == 1 && irSensorStatus == 1) {
+        strcpy(sensorFeedback->sensorFeedback, "Obstacle detected");
+    } else {
+        strcpy(sensorFeedback->sensorFeedback, "No obstacle detected");
+    }
+}
+
+void getMainStatus(MainStatus* mainStatus) {
+    mainStatus->mainStatus = 1; // Set main status to 1
+}
+
+void printStatus(DoorControl* doorControl, SensorFeedback* sensorFeedback, SpeedManagement* speedManagement, MainStatus* mainStatus) {
+    // Print the status of each component
+    printf("Door Control Status: %d\n", doorControl->doorStatus);
+    printf("Light Status: %d\n", doorControl->lightStatus);
+    printf("Main Status: %d\n", mainStatus->mainStatus);
+    printf("Sensor Feedback: %s\n", sensorFeedback->sensorFeedback);
+    printf("Speed Management: %d\n", speedManagement->speed);
+}
+
+int main() {
+    // Initialize components
+    DoorControl doorControl;
+    SensorFeedback sensorFeedback;
+    SpeedManagement speedManagement;
+    MainStatus mainStatus;
+
+    initDoorControl(&doorControl);
+    initSensorFeedback(&sensorFeedback);
+    initSpeedManagement(&speedManagement);
+    initMainStatus(&mainStatus);
+
+    // Update main status
+    getMainStatus(&mainStatus);
+
+    // Print status
+    printStatus(&doorControl, &sensorFeedback, &speedManagement, &mainStatus);
+
+    return 0;
+}
+
+
+/*
 #include "SpeedManagement.c"
 #include "DoorControl.c"
 #include "SensorFeedback.c"
@@ -115,3 +233,4 @@ void sendCarriageMessage(const char *message) {
     printf("Sending message to Carriage Control Program: %s\n", message);
     sendPacket(message);
 }
+*/
