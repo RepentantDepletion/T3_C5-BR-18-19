@@ -1,3 +1,6 @@
+#define PACKAGE t3_c5_br
+
+#include "SpeedManagement.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,14 +12,7 @@
 #define SERVER_PORT_BR19 3019
 #define BUFFER_SIZE 1024
 
-// Define function prototypes
-void receive_packet(int sockfd, char *buffer, struct sockaddr_in *client_addr);
-void send_packet(int sockfd, const char *message, struct sockaddr_in *server_addr);
-void execute_command(const char *command);
-void init_data_processing();
-void set_speed(float speed);
-void close_door();
-void open_door();
+DataProcesing data;
 
 // Main function
 int main() {
@@ -69,58 +65,4 @@ int main() {
     close(sockfdBR19);
 
     return 0;
-}
-
-// Function to receive packets
-void receive_packet(int sockfd, char *buffer, struct sockaddr_in *client_addr) {
-    socklen_t len = sizeof(*client_addr);
-    recvfrom(sockfd, buffer, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *) client_addr, &len);
-    buffer[strlen(buffer)] = '\0';
-}
-
-// Function to send packets
-void send_packet(int sockfd, const char *message, struct sockaddr_in *server_addr) {
-    sendto(sockfd, message, strlen(message), MSG_CONFIRM, (const struct sockaddr *) server_addr, sizeof(*server_addr));
-}
-
-// Function to execute command
-void execute_command(const char *command) {
-    if (strcmp(command, "fast") == 0) {
-        set_speed(5.0f);
-        close_door();
-    } else if (strcmp(command, "slow") == 0) {
-        set_speed(2.5f);
-        close_door();
-    } else if (strcmp(command, "reverseSlow") == 0) {
-        set_speed(-2.5f);
-        close_door();
-    } else if (strcmp(command, "stopClose") == 0) {
-        set_speed(0.0f);
-        close_door();
-    } else if (strcmp(command, "stopOpen") == 0) {
-        set_speed(0.0f);
-        open_door();
-    } else if (strcmp(command, "disconnect") == 0) {
-        printf("Carriage disconnected: OFLN\n");
-    } else {
-        printf("Unknown command: %s\n", command);
-    }
-}
-
-// Placeholder functions for system control
-void set_speed(float speed) {
-    printf("Setting speed to: %.2f\n", speed);
-}
-
-void close_door() {
-    printf("Closing door\n");
-}
-
-void open_door() {
-    printf("Opening door\n");
-}
-
-void init_data_processing() {
-    printf("Initializing data processing...\n");
-    // Initialization logic
 }

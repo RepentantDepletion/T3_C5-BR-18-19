@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+/*
 #include "driver/ledc.h"  // LEDC for PWM
 #include "driver/gpio.h"  // GPIO control
+*/
 
 // Define the motor control pins
 static const int motorPin1 = 18;  // Motor direction pin 1
