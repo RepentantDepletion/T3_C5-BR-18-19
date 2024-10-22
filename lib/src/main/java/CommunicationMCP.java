@@ -24,7 +24,7 @@ public class CommunicationMCP {
 
     static Parser THECCP;
 
-    JSONObject recieved;
+    public JSONObject recieved;
 
     public CommunicationMCP(DatagramSocket socket, Parser THECCP, String client_id) {
         this.socket = socket;
@@ -38,7 +38,7 @@ public class CommunicationMCP {
         message = Message;
     }
 
-    void handshake() {
+    void handshake() { // use to be static
         try {
             // use parser method to send json init with CCIN messae
             JSONObject sendJson = THECCP.toMCP("CCIN");
@@ -111,26 +111,26 @@ public class CommunicationMCP {
         // return recieved;
     }
 
-    static void sendPacket(JSONObject isaac) {
+     static void sendPacket(JSONObject isaac) {
 
         try {
-            JSONObject sendit= new JSONObject();
+            JSONObject sendit= isaac;
             InetAddress inetAddresses = InetAddress.getByName("10.20.30.1");
             int port = 2000;
 
 
             // get message from parser
-            String putMessage= THECCP.receiveUdpPacket();
+            String putMessage= isaac.toString();
 
-            THECCP.setStatus(putMessage);
+            // THECCP.setStatus(putMessage);
 
            //get json object to send from the parser
-            sendit=THECCP.toMCP(putMessage);
+            // sendit=THECCP.toMCP(putMessage);
 
             // Convert JSONObject back to JSON string
-            String responseJson= sendit.toString();
+            // String responseJson= sendit.toString();
            
-            byte[] sendBuffer = responseJson.getBytes();
+            byte[] sendBuffer = putMessage.getBytes();
 
             // send back
             DatagramPacket sendback = new DatagramPacket(sendBuffer, sendBuffer.length, inetAddresses, port);

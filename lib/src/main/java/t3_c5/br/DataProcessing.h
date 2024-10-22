@@ -8,7 +8,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
-#include <jni.h>      // should be the library to allow a java class to call this class + the other c files
+#include <jni.h>
 
 
 #define SERVER_PORT_DEFAULT 3018
