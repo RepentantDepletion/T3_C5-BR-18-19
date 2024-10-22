@@ -3,7 +3,6 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <cjson/cJSON.h>
 
 #define SERVER_IP "10.20.30.1"
 #define SERVER_PORT_BR18 3018
@@ -11,7 +10,6 @@
 #define BUFFER_SIZE 1024
 
 // Define function prototypes
-void handshake(int sockfd, struct sockaddr_in *server_addr);
 void receive_packet(int sockfd, char *buffer, struct sockaddr_in *client_addr);
 void send_packet(int sockfd, const char *message, struct sockaddr_in *server_addr);
 void execute_command(const char *command);
@@ -61,8 +59,6 @@ int main() {
         execute_command(buffer);
 
         // Send status message
-        cJSON *statusMessage = cJSON_CreateObject();
-        cJSON_AddStringToObject(statusMessage, "type", "STAT");
         const char *status_string = cJSON_Print(statusMessage);
         send_packet(sockfdBR18, status_string, &server_addrBR18);
         cJSON_Delete(statusMessage);
@@ -73,12 +69,6 @@ int main() {
     close(sockfdBR19);
 
     return 0;
-}
-
-// Handshake function
-void handshake(int sockfd, struct sockaddr_in *server_addr) {
-    const char *handshake_msg = "HANDSHAKE";
-    send_packet(sockfd, handshake_msg, server_addr);
 }
 
 // Function to receive packets
