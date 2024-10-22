@@ -14,30 +14,27 @@
 #define BUFFER_SIZE 1024
 
 const char *ssid = "ENGG2K3K";
-
-DataProcessing data;
+IPAddress local_IP(10, 20, 30, 118);
+IPAddress gateway(10, 30, 20, 1);
 
 // Main function
-int main()
-{
-    data.receivePacket();
-    data.executeCommand()
-}
+void loop(){}
 
-void setupWifiConnection()
+void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(SERVER_PORT_BR18);
     delay(1000);
 
     WiFi.mode(WIFI_STA); // optional
     WiFi.begin(ssid);
     Serial.println("\nconnecting");
 
-    while(WiFi.status() != WL_CONNECTING){
+    while(WiFi.status() != WL_CONNECTED){
         Serial.print(".");
         delay(100);
     }
 
+    Serial.println("\nIP Address:\n" + local_IP);
     Serial.println("\nConnected to network");
     Serial.print("Local ESP32 IP: ");
     Serial.println(WiFi.localIP());
