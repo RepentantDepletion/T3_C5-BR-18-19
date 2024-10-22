@@ -1,6 +1,5 @@
 #define PACKAGE t3_c5_br
 
-//#include "SpeedManagement.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,4 +37,34 @@ void setup()
     Serial.println("\nConnected to network");
     Serial.print("Local ESP32 IP: ");
     Serial.println(WiFi.localIP());
+}
+
+void dataprocess(){     // may need to change specific names of functions once data processing is actually complete
+
+    receivePacket();
+
+    const char *command = "example";
+    executeCommand(command);
+
+    // Example data to send
+    const char *dataToSend = "PACKET_DATA";
+    sendPacket(dataToSend);
+}
+
+// Function to simulate receiving a packet
+void receivePacket(){
+    Serial.println("Receiving packet...");
+}
+
+// Function to execute a command
+void executeCommand(const char *command){
+    Serial.print("Executing command: ");
+    Serial.println(command);
+
+}
+
+// Function for sending a packet
+void sendPacket(const char *data){
+    Serial.print("Sending packet with data: ");
+    Serial.println(data);
 }
