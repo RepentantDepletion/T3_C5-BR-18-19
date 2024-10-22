@@ -40,6 +40,13 @@ public class CCP {
             BR18.handshake(); // handshake for br18
             BR19.handshake(); // handshake for br19
 
+            BR18.recievePacket();
+            BR18.sendPacket(input18.toMCP(input18.receiveUdpPacket()));
+
+            BR19.recievePacket();
+            BR19.sendPacket(input19.toMCP(input19.receiveUdpPacket()));
+
+
         } catch (java.net.SocketException e) {
             System.err.println(e);
         }
