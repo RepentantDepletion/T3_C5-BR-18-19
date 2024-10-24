@@ -1,8 +1,7 @@
 //update 1.2
 #define PACKAGE t3_c5_br
 
-// Include required libraries
-
+//Include required libraries
 #include "SpeedManagement.h"
 #include "DoorControl.h"
 #include "SensorFeedback.h"
