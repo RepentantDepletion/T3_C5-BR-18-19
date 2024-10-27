@@ -6,8 +6,8 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 
-static const int motorPin1 = 18; // Motor direction pin 1
-static const int motorPin2 = 19; // Motor direction pin 2
+static const int motorPin1 = 12; // Motor direction pin 1
+static const int motorPin2 = 13; // Motor direction pin 2
 static const int pwmPin = 14;    // PWM pin to control motor speed
 unsigned long myTime;
 unsigned long startTime;
