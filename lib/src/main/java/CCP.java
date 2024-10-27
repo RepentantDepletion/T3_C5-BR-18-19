@@ -1,75 +1,110 @@
 import java.net.DatagramSocket;
-import org.checkerframework.checker.units.qual.Acceleration;
+import java.net.SocketException;
 
 public class CCP {
 
-    static float Time;
     static Parser input18;
     static Parser input19;
-    static Parser input;
     static CommunicationMCP BR18;
     static CommunicationMCP BR19;
 
-    public static void init(DatagramSocket socket, DatagramSocket socket2) {
-
-        BR18 = new CommunicationMCP(socket, input18, "BR18");
-        BR19 = new CommunicationMCP(socket2, input19, "BR19");
-
-        input18 = new Parser("OFLN", "10.20.30.118", 3018, (int) (Math.random() * (10000 - 3000) + 3000));
-        input19 = new Parser("OFLN", "10.20.30.119", 3019, (int) (Math.random() * (10000 - 3000) + 3000));
-
-    }
-
-    // DataProcessing data;
-    // Acceleration accInput;
-
-    public static void main(String args[]) {
-
-        Time = System.currentTimeMillis();
+    public static void main(String[] args) {
 
         try {
-            // CCPStatus status;
-            DatagramSocket socket = new DatagramSocket(3018);
-            // CommunicationMCP BR18= new CommunicationMCP(socket);
+            DatagramSocket socket18 = new DatagramSocket(3018);
+            DatagramSocket socket19 = new DatagramSocket(3019);
 
-            DatagramSocket socket2 = new DatagramSocket(3019);
-            // CommunicationMCP BR19= new CommunicationMCP(socket2);
+            // Start threads for BR18 and BR19 sending/receiving communication
+            Thread br18CommThread = new Thread(new CommunicationHandler("BR18", socket18, "10.20.30.118", 3018));
+            Thread br19CommThread = new Thread(new CommunicationHandler("BR19", socket19, "10.20.30.119", 3019));
 
-            init(socket, socket2);
+            // Start threads for heartbeat
+            Thread heartbeatThread = new Thread(new HeartbeatHandler());
 
-            BR18.handshake(); // handshake for br18
-            BR19.handshake(); // handshake for br19
+            br18CommThread.start();
+            br19CommThread.start();
+            heartbeatThread.start();
 
-            BR18.recievePacket();
-            BR18.sendPacket(input18.toMCP(input18.receiveUdpPacket()));
+            // Optionally, join threads if you want the main thread to wait for them
+            // br18CommThread.join();
+            // br19CommThread.join();
+            // heartbeatThread.join();
 
-            BR19.recievePacket();
-            BR19.sendPacket(input19.toMCP(input19.receiveUdpPacket()));
-
-
-        } catch (java.net.SocketException e) {
-            System.err.println(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+}
 
-    public void heartbeat() {
+class CommunicationHandler implements Runnable {
 
-        while (Time % 2 == 0) {
-            input18.receiveUdpPacket();
-            BR18.sendPacket(input18.toMCP(input18.receiveUdpPacket()));
+    private CommunicationMCP br;
+    private Parser input;
+    private DatagramSocket socket;
+    private String brName;
+    private String ip;
+    private int port;
 
-            input19.receiveUdpPacket();
-            BR19.sendPacket(input19.toMCP(input19.receiveUdpPacket()));
+    public CommunicationHandler(String brName, DatagramSocket socket, String ip, int port) {
+        this.brName = brName;
+        this.socket = socket;
+        this.ip = ip;
+        this.port = port;
+
+        int randomPort = (int) (Math.random() * (10000 - 3000) + 3000);
+        this.input = new Parser("OFLN", ip, port, randomPort);
+        this.br = new CommunicationMCP(socket, input, brName);
+    }
+
+    @Override
+    public void run() {
+        try {
+            // Handshake
+            br.handshake();
+
+            // Continuous sending and receiving of messages
+            while (true) {
+                br.sendPacket(input.toMCP(input.receiveUdpPacket()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+}
 
-    public void call() {
+class HeartbeatHandler implements Runnable {
 
-        BR18.recievePacket();
-        input18.fromMCP(BR18.recieved);
+    private static final int HEARTBEAT_INTERVAL = 2000; // 2 seconds
 
-        BR19.recievePacket();
-        input19.fromMCP(BR19.recieved);
+    @Override
+    public void run() {
+        try {
+            CCP.BR18 = new CommunicationMCP(new DatagramSocket(3018), CCP.input18, "BR18");
+            CCP.BR19 = new CommunicationMCP(new DatagramSocket(3019), CCP.input19, "BR19");
+
+            CCP.input18 = new Parser("OFLN", "10.20.30.118", 3018, (int) (Math.random() * (10000 - 3000) + 3000));
+            CCP.input19 = new Parser("OFLN", "10.20.30.119", 3019, (int) (Math.random() * (10000 - 3000) + 3000));
+            
+            while (true) {
+                long currentTime = System.currentTimeMillis();
+
+                // Perform heartbeat logic
+                System.out.println("Heartbeat at: " + currentTime);
+
+                // Simulate heartbeat logic with input18 and input19 (as in original)
+                CCP.input18.receiveUdpPacket();
+                CommunicationMCP.sendPacket(CCP.input18.toMCP(CCP.input18.receiveUdpPacket()));
+
+                CCP.input19.receiveUdpPacket();
+                CommunicationMCP.sendPacket(CCP.input19.toMCP(CCP.input19.receiveUdpPacket()));
+
+                // Sleep for 2 seconds before the next heartbeat
+                Thread.sleep(HEARTBEAT_INTERVAL);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (SocketException se){
+            
+        }
     }
-
 }
