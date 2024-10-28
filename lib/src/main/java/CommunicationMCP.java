@@ -65,8 +65,7 @@ public class CommunicationMCP {
             // Check if the received JSON matches the expected values
             if (receiveJson.getString("client_type").equals("CCP") &&
                     receiveJson.getString("message").equals("AKIN") &&
-                    receiveJson.getString("client_id").equals(client_id) &&
-                    receiveJson.getString("sequence_number").equals("s_mcp")) {
+                    receiveJson.getString("client_id").equals(client_id)) {
                 System.out.println("Received expected JSON response.");
             } else {
                 System.out.println("Received unexpected JSON response: " + receiveJson.toString());
