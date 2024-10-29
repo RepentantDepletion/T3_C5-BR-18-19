@@ -8,7 +8,7 @@
 
 Servo servo1;
 
-void setup() {
+void setupDoorControl() {
 
   Serial.begin(115200);
   servo1.attach(servoPin);
