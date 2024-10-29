@@ -50,12 +50,34 @@ DataProcessing dataProcessing;
 // Main function loop
 void loop() {
     dataprocess();  // Continuously process data in the loop
+    connectionStartBR();
+    initDataProcessing();
+    receivePacket();
+    executeCommand();
+    sendPacket();
+    setStationID();
+    parseCommand();
+    sendCarriageMessage();
+    setupDoorControl();
+    open();
+    close();
+    setSpeed();
+    increaseSpeed();
+    decreaseSpeed();
+    stopMotor();
+    initSpeedManagement();
+    initSensorFeedback();
+    getSensorStatus();
+    updateSensorStatus();
+    main();
+
+
 }
 
 // Setup function to initialize WiFi and data processing
 void setup() {
     Serial.begin(115200);  // Initialize serial communication for debugging
-    delay(1000);
+    //delay(1000);
 
     // Connect to WiFi
     WiFi.mode(WIFI_STA);
